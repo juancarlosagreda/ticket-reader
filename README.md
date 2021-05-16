@@ -35,5 +35,5 @@ yarn start
 ## Usage
 From the main page, click on new ticket and see the changes on the total value and on the database by clicking on the transactions page.
 ## Licence
-[Themesberg](https://github.com/themesberg/volt-react-dashboard)
-[MIT](https://themesberg.com/licensing#mit)
+- [Themesberg](https://github.com/themesberg/volt-react-dashboard)
+- [MIT](https://themesberg.com/licensing#mit)
