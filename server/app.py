@@ -10,12 +10,11 @@ app = Flask(__name__)
 
 # Initialize Firestore DB
 
-'''
-cred = credentials.Certificate('key.json')
+
+cred = credentials.Certificate('config.json')
 default_app = initialize_app(cred)
 db = firestore.client()
-todo_ref = db.collection('todos')
-'''
+ticket_ref = db.collection('ticketreader')
 
 
 @app.route('/add', methods=['GET'])
@@ -28,6 +27,7 @@ def create():
     try:
         # id = request.json['id']
         # todo_ref.document(id).set(request.json)
+
         return jsonify({"success": True}), 200
     except Exception as e:
         return f"An Error Occured: {e}"
@@ -36,24 +36,15 @@ def create():
 @app.route('/listAll', methods=['GET'])
 def readAll():
     """
-        read() : Fetches documents from Firestore collection as JSON.
+        readAll() : Fetches all ticket documents 
         todo : Return document that matches query ID.
         all_todos : Return all documents.
-
+    """
     try:
-        # Check if ID was passed to URL query
-        todo_id = request.args.get('id')
-        if todo_id:
-            todo = todo_ref.document(todo_id).get()
-            return jsonify(todo.to_dict()), 200
-        else:
-            all_todos = [doc.to_dict() for doc in todo_ref.stream()]
-            return jsonify(all_todos), 200
+        all_tickets = [doc.to_dict() for doc in ticket_ref.stream()]
+        return jsonify(all_tickets[0]['tickets'])
     except Exception as e:
         return f"An Error Occured: {e}"
-    """
-
-    return jsonify({"allTickets": True}), 200
 
 
 @app.route('/listWeek', methods=['GET'])
@@ -82,24 +73,16 @@ def readWeek():
 @app.route('/netValue', methods=['GET'])
 def readNetValue():
     """
-        read() : Fetches documents from Firestore collection as JSON.
+        readAll() : Fetches all ticket documents 
         todo : Return document that matches query ID.
         all_todos : Return all documents.
-
+    """
     try:
-        # Check if ID was passed to URL query
-        todo_id = request.args.get('id')
-        if todo_id:
-            todo = todo_ref.document(todo_id).get()
-            return jsonify(todo.to_dict()), 200
-        else:
-            all_todos = [doc.to_dict() for doc in todo_ref.stream()]
-            return jsonify(all_todos), 200
+        all_tickets = [doc.to_dict() for doc in ticket_ref.stream()]
+        value = all_tickets[0]['netValue']
+        return jsonify({"netValue": value}), 200
     except Exception as e:
         return f"An Error Occured: {e}"
-    """
-
-    return jsonify({"netValue": True}), 200
 
 
 port = int(os.environ.get('PORT', 8080))
