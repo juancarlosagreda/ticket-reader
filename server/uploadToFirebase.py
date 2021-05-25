@@ -3,16 +3,15 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 # Use a service account
-cred = credentials.Certificate('./APIKeyPython.json')
+cred = credentials.Certificate('./config.json')
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-doc_ref = db.collection(u'ticketreader').document(
-    u'ticketreader').collection(u'tickets')
+doc_ref = db.collection(u'ticketreader')
 
 
-def newTicket(id, email, cost, flectura, fticket, IVA, NIF, company, wpage, number):
+def newTicket(email, cost, flectura, fticket, IVA, NIF, company, wpage, number):
     # data structure for every ticket
     ticketData = {
         u'Correo': email,
@@ -26,10 +25,14 @@ def newTicket(id, email, cost, flectura, fticket, IVA, NIF, company, wpage, numb
         u'Telefono': number
     }
 
-    doc_ref.document(id).set(ticketData)
+    #all_tickets = [doc.to_dict() for doc in doc_ref.stream()]
+
+    doc_ref.add(ticketData)
 
     print(ticketData)
 
 
-newTicket("Company C", "companyc@company.com", "40", "01/01/2021", "03/04/2020",
+"""
+newTicket("Company D", "companyc@company.com", "40", "01/01/2021", "03/04/2020",
           "21", "ABC1234", "Company C", "companyc.com", "635112260")
+"""

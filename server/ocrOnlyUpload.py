@@ -6,8 +6,9 @@ import cv2 as cv
 import json
 import re
 from datetime import date
+from uploadToFirebase import newTicket
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = fr"./APIKeyPython.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = fr"./config.json"
 
 # Funcion de Google para extaer texto(solo funciona con path, no parsed hasta donde yo se)
 
@@ -312,6 +313,17 @@ def extraerinformacion(path):
         'correo': encontrarcorreo(data),
         'paginaweb': encontrarpaginaweb(data)
     }
+    newTicket(
+        encontrarcorreo(data),
+        encontrarcoste(data),
+        fechadelectura(),
+        encontrarfechas(data),
+        encontrarIVA(data),
+        encontrarNIF(data),
+        encontrarnomempresa(data),
+        encontrarpaginaweb(data),
+        encontrartelefono(data)
+    )
     return informacion
 
 
@@ -329,6 +341,9 @@ r'''
             outfile.write(json.dumps(data,indent=4,sort_keys=True))
 '''
 
+
+"""
 if __name__ == "__main__":
     extraerinformacion(
         './Imagenes/ticket.jpg')
+"""

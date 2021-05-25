@@ -218,17 +218,31 @@ export const TransactionsTable = () => {
   useEffect(() => {
     const ticketsAux = [];
 
+    // function getData() {
+    //   firestore.collection('ticketreader/')
+    //     .get()
+    //     .then(snap => {
+    //       snap.forEach(doc => {
+    //         // tickets = doc.data().tickets
+    //         // console.log("ticket data: " + tickets
+    //         setTickets(doc.data()['tickets'])
+    //       })
+    //     })
+    // }
+
+
     function getData() {
-      firestore.collection('ticketreader/')
+      firestore.collection('ticketreader')
         .get()
         .then(snap => {
           snap.forEach(doc => {
             // tickets = doc.data().tickets
-            // console.log("ticket data: " + tickets
-            setTickets(doc.data()['tickets'])
+            console.log(doc.id + "=>" + doc.data())
+            //setTickets(doc.data()['tickets'])
           })
         })
     }
+
     getData();
   }, [])
 
