@@ -10,6 +10,8 @@ import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 
+import axios from 'axios';
+
 // Import firebase config data
 import config from "../data/config";
 
@@ -213,7 +215,8 @@ export const RankingTable = () => {
 export const TransactionsTable = () => {
 
   const [tickets, setTickets] = useState([]);
-  const [total, setTotal] = useState(0);
+  // const [id, setId] = useState(0)
+  // const [total, setTotal] = useState(0);
 
   useEffect(() => {
     const ticketsAux = [];
@@ -232,14 +235,11 @@ export const TransactionsTable = () => {
 
 
     function getData() {
-      firestore.collection('ticketreader')
-        .get()
-        .then(snap => {
-          snap.forEach(doc => {
-            // tickets = doc.data().tickets
-            console.log(doc.id + "=>" + doc.data())
-            //setTickets(doc.data()['tickets'])
-          })
+      axios.get('http://localhost:8080/listAll')
+        .then((response) => {
+          console.log(response.data.length)
+          setTickets(response.data)
+
         })
     }
 

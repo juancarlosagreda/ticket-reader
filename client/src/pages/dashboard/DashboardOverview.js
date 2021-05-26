@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
@@ -7,6 +7,9 @@ import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-boots
 import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, ProgressTrackWidget, RankingWidget, SalesValueWidget, SalesValueWidgetPhone, AcquisitionWidget } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares, totalOrders } from "../../data/charts";
+
+
+import axios from 'axios'
 
 // import firebase config data
 import config from "../../data/config"
@@ -35,29 +38,65 @@ var firestore = firebase.firestore();
 export default () => {
 
   const [netWorth, setNetWorth] = useState('');
+  const [path, setPath] = useState('');
+  const [isDisabled, setIsDisabled] = useState(true);
 
-  const snapshot = firestore.collection('ticketreader/').get();
-  snapshot.then(snap => {
-    snap.forEach(doc => {
-      // console.log(doc.id, '=>', doc.data())
-      setNetWorth(doc.data().netValue);
-      // console.log("net worth: " + netWorth)
-    })
-  })
+  const baseURL = '/Users/JuanCarlos/ticket-reader/server/Imagenes/';
+
+
+  const fileInput = useRef(null)
+
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    console.log(fileInput.current);
+    fileInput.current.click();
+  }
+
+  const fileSelectedHandler = e => {
+    console.log(e.target.files[0]);
+    setPath(baseURL + e.target.files[0].name)
+    setIsDisabled(false)
+  }
+
+  const fileUploadHandler = () => {
+    console.log("path sent: " + path)
+
+    if (path !== "") {
+      axios.post('http://localhost:8080/add', path, {
+        headers: { 'Content-Type': 'text/plain' }
+      }).then(res => {
+        console.log(res);
+      });
+    }
+    //   axios({
+    //     method: 'get',
+    //     url: 'http://localhost:8080/add',
+    //     headers: {},
+    //     data: path
+    //   }).then(res => {
+    //     console.log(res)
+    //   });
+  }
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/netValue')
+      .then((response) => {
+        console.log(response.data.netValue)
+        setNetWorth(response.data.netValue)
+      })
+  }, [])
 
   return (
     <>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        <Dropdown className="btn-toolbar">
-          <Dropdown.Toggle as={Button} variant="primary" size="sm" className="me-2">
-            <FontAwesomeIcon icon={faPlus} className="me-2" />New Ticket
-          </Dropdown.Toggle>
-          <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-2">
-            <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2" /> Upload Ticket
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+      <div className="d-flex flex-wrap flex-md-nowrap align-items-center py-4">
+        <input onChange={fileSelectedHandler} type="file" ref={fileInput} style={{ display: 'none' }} />
+        <Button variant="primary" onClick={handleClick} className="m-1">
+          <FontAwesomeIcon icon={faPlus} className="me-2" />New Ticket
+          </Button>
+        <Button variant="primary" className="m-1">
+          <FontAwesomeIcon onClick={fileUploadHandler()} icon={faCloudUploadAlt} className="me-2" /> Upload Ticket
+        </Button>
       </div>
 
       <Row className="justify-content-md-center">

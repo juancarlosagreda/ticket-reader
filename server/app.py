@@ -6,9 +6,11 @@ import os
 from flask import Flask, request, jsonify
 from firebase_admin import credentials, firestore, initialize_app
 from ocrOnlyUpload import *
+from flask_cors import CORS
 
 # Initialize Flask app
 app = Flask(__name__)
+cors = CORS(app)
 
 # Initialize Firestore DB
 
@@ -41,7 +43,7 @@ def index():
     return md_template_string
 
 
-@app.route('/add', methods=['GET'])
+@app.route('/add', methods=['GET', 'POST'])
 def create():
     """
         create() : Add document to Firestore collection with request body.
@@ -54,6 +56,8 @@ def create():
         content = request.get_data()
         text = str(content, encoding="utf-8")
         rawText = r'{}'.format(text)
+
+        print(content)
 
         extraerinformacion(rawText)
 

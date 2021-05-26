@@ -32,7 +32,7 @@ export default () => {
               <div className="bg-white shadow-soft border border-light rounded p-4 p-lg-5 w-100 fmxw-500">
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <div className="user-avatar large-avatar mx-auto mb-3 border-dark p-2">
-                    <Image src={Profile3} className="rounded-circle" />
+                    <Image src="https://media-exp1.licdn.com/dms/image/C4D35AQFOrL-FMy5ZCg/profile-framedphoto-shrink_200_200/0/1616497852333?e=1622109600&v=beta&t=tUhlkzIHVx7karsNigVQZTFwqRWYpeFd0ys7Y--RI8w" className="rounded-circle" />
                   </div>
                   <h3 className="mb-3">AlfredoArtiles</h3>
                   <p className="text-gray">Industrial Electronics Engineer</p>

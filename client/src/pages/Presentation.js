@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
@@ -8,7 +8,62 @@ import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, Pr
 import { PageVisitsTable } from "../components/Tables";
 import { trafficShares, totalOrders } from "../data/charts";
 
+
+import axios from 'axios'
+
+// import firebase config data
+import config from "../data/config"
+
+// Firebase App (the core Firebase SDK) is always required and must be listed first
+import firebase from "firebase/app";
+
+// Add the Firebase products that you want to use
+import "firebase/storage";
+import "firebase/firestore";
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(config);
+} else {
+  firebase.app(); // if already initialized, use that one
+}
+
+// Get a reference to the storage service, which is used to create references in your storage bucket
+var storage = firebase.storage();
+
+// Get a reference to the storage service, which is used to create references in your storage bucket
+var firestore = firebase.firestore();
+
+
 export default () => {
+
+  const [netWorth, setNetWorth] = useState('');
+
+  // const snapshot = firestore.collection('ticketreader/').get();
+  // snapshot.then(snap => {
+  //   snap.forEach(doc => {
+  //     // console.log(doc.id, '=>', doc.data())
+  //     setNetWorth(doc.data().netValue);
+  //     // console.log("net worth: " + netWorth)
+  //   })
+  // })
+
+  // function getData() {
+  //   axios.get('http://localhost:8080/netValue')
+  //     .then((response) => {
+  //       console.log(response.data.length)
+  //       setNetWorth(response.data)
+  //     })
+  // }
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/netValue')
+      .then((response) => {
+        console.log(response.data.netValue)
+        setNetWorth(response.data.netValue)
+      })
+  }, [])
+
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -22,25 +77,20 @@ export default () => {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-
-        {/* <ButtonGroup>
-          <Button variant="outline-primary" size="sm">Share</Button>
-          <Button variant="outline-primary" size="sm">Export</Button>
-        </ButtonGroup> */}
       </div>
 
       <Row className="justify-content-md-center">
         <Col xs={12} className="mb-4 d-none d-sm-block">
           <SalesValueWidget
             title="Net Value"
-            value="10,567"
+            value={netWorth}
             percentage={10.57}
           />
         </Col>
         <Col xs={12} className="mb-4 d-sm-none">
           <SalesValueWidgetPhone
             title="Net Value"
-            value="10,567"
+            value={netWorth}
             percentage={10.57}
           />
         </Col>
@@ -91,21 +141,8 @@ export default () => {
                 </Col>
               </Row>
             </Col>
-
             <Col xs={12} xl={4}>
               <Row>
-                {/* <Col xs={12} className="mb-4">
-                  <BarChartWidget
-                    title="Total orders"
-                    value={452}
-                    percentage={18.2}
-                    data={totalOrders} />
-                </Col> */}
-
-                {/* <Col xs={12} className="px-0 mb-4">
-                  <RankingWidget />
-                </Col> */}
-
                 <Col xs={12} className="px-0">
                   <AcquisitionWidget />
                 </Col>
