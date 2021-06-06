@@ -235,7 +235,7 @@ export const TransactionsTable = () => {
 
 
     function getData() {
-      axios.get('http://localhost:8080/listAll')
+      axios.get('http://localhost:8081/listAll')
         .then((response) => {
           console.log(response.data.length)
           setTickets(response.data)

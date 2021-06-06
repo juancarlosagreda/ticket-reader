@@ -63,7 +63,7 @@ export default () => {
     console.log("path sent: " + path)
 
     if (path !== "") {
-      axios.post('http://localhost:8080/add', path, {
+      axios.post('http://localhost:8081/add', path, {
         headers: { 'Content-Type': 'text/plain' }
       }).then(res => {
         console.log(res);
@@ -80,7 +80,7 @@ export default () => {
   }
 
   useEffect(() => {
-    axios.get('http://localhost:8080/netValue')
+    axios.get('http://localhost:8081/netValue')
       .then((response) => {
         console.log(response.data.netValue)
         setNetWorth(response.data.netValue)
@@ -94,7 +94,7 @@ export default () => {
         <Button variant="primary" onClick={handleClick} className="m-1">
           <FontAwesomeIcon icon={faPlus} className="me-2" />New Ticket
           </Button>
-        <Button variant="primary" className="m-1">
+        <Button variant="primary" className="m-1" hidden>
           <FontAwesomeIcon onClick={fileUploadHandler()} icon={faCloudUploadAlt} className="me-2" /> Upload Ticket
         </Button>
       </div>
